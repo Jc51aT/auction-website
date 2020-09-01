@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Watchlist</h2>
+
+    <ul>
+        
+            {% if user.watchlist_listing  %}
+                <li> {{ user.watchlist_listing }} </li>
+            {% else %}
+                <div>
+                    Watch list is currently empty.
+                </div>
+            {% endif %}
+        
+    </ul>
+{% endblock %}

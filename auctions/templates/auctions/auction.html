@@ -1,0 +1,82 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% load static %}
+
+<h2 id="listing_title">Listings: {{ listing.listing_title }}</h2>
+{% if user.is_authenticated %}
+    {% if listing in watchlist %}
+    <span class="badge badge-pill badge-info">
+        On Watchlist
+    </span>
+    {% else %}
+        <form id="watchlist-form" method="post">
+            {% csrf_token %}
+            <button type="submit">Add to Watchlist</button>
+        </form>
+    {% endif %}
+{% endif %}
+<div>
+    {% if listing.listing_image %}
+        <div>
+            <img src="{{ listing.listing_image.url }}" alt="">
+        </div>
+    {% else %}
+        <div>
+            <img src="{% static 'auctions/default_img.png' %}" alt="">
+        </div>
+    {% endif %}
+    <div>
+        {{ listing.listing_description }}
+    </div>
+    <div>
+        ${{ listing.listing_price }}
+    </div>
+    <div>
+        {% if num_bids > 0 and user == max_user %}
+        <div>
+            Number of bids: {{ num_bids }}. Your bid is the current bid.
+        </div>
+        {% elif  num_bids > 0 %}
+        <div>
+            Number of bid(s): {{ num_bids }}
+        </div>
+        {% else %}
+        <div>
+            Number of bids 0.
+        </div>
+        {% endif %}
+    </div>
+    {% if user.is_authenticated %}
+        {% if message %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+        {% endif %}
+        <div>
+            <form action="{% url 'auction' listing.id %}" method="post">
+                {% csrf_token %}
+                <input type="number" , name="bid" , placeholder="Bid">
+                <input class="btn btn-primary" type="submit" value="Place Bid">
+            </form>
+        </div>
+    {% endif %}
+</div>
+<div>
+    <h3>Details</h3>
+    <div>
+        <ul>
+            <li>Listed by: {{ listing.listed_by }}</li>
+            {% if listing.get_listing_cat_num  == 1 %}
+                <li>Category: Home</li>
+            {% elif listing.get_listing_cat_num == 2 %}
+                <li>Category: Garden</li>
+            {% elif listing.get_listing_cat_num == 3 %}
+                <li>Category: Clothing</li>
+            {% elif listing.get_listing_cat_num == 4 %}
+                <li>Category: Books</li>
+            {% else %}
+                <li>Category: Other </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

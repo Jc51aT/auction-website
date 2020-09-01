@@ -1,0 +1,22 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Categories</h2>
+
+    <ul>
+        {% for listing in Auction_Listings %}
+            {% if listing.get_listing_cat_num  == 1 %}
+                <li>Home</li>
+            {% elif listing.get_listing_cat_num == 2 %}
+                <li>Garden</li>
+            {% elif listing.get_listing_cat_num == 3 %}
+                <li>Clothing</li>
+            {% elif listing.get_listing_cat_num == 4 %}
+                <li>Books</li>
+            {% else %}
+                <li>Other </li>
+            {% endif %}
+               
+        {% endfor %}
+    </ul>
+{% endblock %}
