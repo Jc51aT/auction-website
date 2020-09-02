@@ -79,8 +79,19 @@ def watchlist(request):
 
 @login_required
 def categories(request):
+    listing_categories_present = set(Auction_Listing.objects.values_list("listing_categories", flat=True))
+    
     return render(request, "auctions/categories.html",{
         "Auction_Listings": Auction_Listing.objects.all(),
+        "listing_cats": listing_categories_present,
+    })
+
+@login_required
+def category(request, listing_categories):
+    listings = Auction_Listing.objects.filter(listing_categories=listing_categories)
+    return render(request, "auctions/category.html",{
+        "Auction_Listings": listings,
+        "category": listings[0].listing_categories
     })
 
 

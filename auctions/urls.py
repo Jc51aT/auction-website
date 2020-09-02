@@ -11,6 +11,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('create_listing/', views.create_listing, name='create_listing'),
     path('categories/', views.categories, name='categories'),
+    path('categories/<str:listing_categories>', views.category, name='category'),
     path('watchlist/', views.watchlist, name='watchlist'),
     re_path(r'(?P<listing_id>[0-9]*)/watchlist_ajax/$',views.watchlist_ajax),
     

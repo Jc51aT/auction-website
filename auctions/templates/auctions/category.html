@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+{% load static %}
+    <h2>Active Listings</h2>
+    
+    {% if category  == '1' %}
+        <h2>Home</h2>
+    {% elif category == '2' %}
+        <h2>Garden</h2>
+    {% elif category == '3' %}
+        <h2>Clothing</h2>
+    {% elif category == '4' %}
+        <h2>Books</h2>
+    {% else %}
+        <h2>Other </h2>
+    {% endif %}
+
+    <div >
+        {% for listing in Auction_Listings %}
+            <div> <a href="{% url 'auction' listing.id %}">
+                {% if listing.listing_image %}
+                    <img class="activeListingImg" src="{{ listing.listing_image.url }}" alt="">
+                {% else %}
+                    <img class="activeListingImg" src="{% static 'auctions/default_img.png' %}" alt="">
+                {% endif %}
+                {{ listing.listing_title }} ${{ listing.listing_price }}.00
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

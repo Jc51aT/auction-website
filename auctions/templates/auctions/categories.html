@@ -2,21 +2,19 @@
 
 {% block body %}
     <h2>Categories</h2>
-
     <ul>
-        {% for listing in Auction_Listings %}
-            {% if listing.get_listing_cat_num  == 1 %}
-                <li>Home</li>
-            {% elif listing.get_listing_cat_num == 2 %}
-                <li>Garden</li>
-            {% elif listing.get_listing_cat_num == 3 %}
-                <li>Clothing</li>
-            {% elif listing.get_listing_cat_num == 4 %}
-                <li>Books</li>
+        {% for cat in listing_cats %}
+            {% if cat  == '1' %}
+                <li><a href="{% url 'category' cat %}">Home</a></li>
+            {% elif cat == '2' %}
+                <li><a href="{% url 'category' cat %}">Garden</a></li>
+            {% elif cat == '3' %}
+                <li><a href="{% url 'category' cat %}">Clothing</a></li>
+            {% elif cat == '4' %}
+                <li><a href="{% url 'category' cat %}">Books</a></li>
             {% else %}
-                <li>Other </li>
+                <li><a href="{% url 'category' cat %}">Other</a> </li>
             {% endif %}
-               
         {% endfor %}
     </ul>
 {% endblock %}
