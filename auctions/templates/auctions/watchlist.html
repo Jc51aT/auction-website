@@ -1,12 +1,24 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+{% load static %}
     <h2>Watchlist</h2>
 
     <ul>
         
-            {% if user.watchlist_listing  %}
-                <li> {{ user.watchlist_listing }} </li>
+            {% if watchlist  %}
+                <div >
+                    {% for listing in watchlist %}
+                        <div> <a href="{% url 'auction' listing.id %}">
+                            {% if listing.listing_image %}
+                                <img class="activeListingImg" src="{{ listing.listing_image.url }}" alt="">
+                            {% else %}
+                                <img class="activeListingImg" src="{% static 'auctions/default_img.png' %}" alt="">
+                            {% endif %}
+                            {{ listing.listing_title }} ${{ listing.listing_price }}.00
+                        </div>
+                    {% endfor %}
+                </div>
             {% else %}
                 <div>
                     Watch list is currently empty.

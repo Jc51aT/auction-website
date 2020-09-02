@@ -74,7 +74,8 @@ def create_listing(request):
 @login_required
 def watchlist(request):
     return render(request, "auctions/watchlist.html",{
-        "User": User.objects.filter(username=request.user.username)
+        "User": request.user,
+        "watchlist": request.user.watchlist.all(),
     })
 
 @login_required
