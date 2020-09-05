@@ -31,10 +31,10 @@ class Auction_Comments(models.Model):
     auction_listing = models.ForeignKey(Auction_Listing, on_delete=models.CASCADE)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     comment = models.CharField(max_length=256)
-    comment_date = models.DateTimeField('Comment date')
+    comment_date = models.DateTimeField('Comment date', auto_now_add=True)
 
     def __str__(self):
-        pass
+        return f"{self.user.username} comments {self.comment} on {self.auction_listing}"
 
 
 class User(AbstractUser):

@@ -60,6 +60,27 @@
         </div>
     {% endif %}
 </div>
+<form id="comment-form" method="post">
+    <div class="form-group">
+        {% csrf_token %}
+        <label for="exampleFormControlTextarea1">Comment: </label>
+        <textarea class="form-control" id="comment" rows="3"></textarea>
+        <input class="btn btn-primary" type="submit" value="Comment">
+    </div>
+</form>
+{% if comments %}
+    <div>
+        <h3></h3>
+        {% for comment in  comments%}
+            <div>
+                {{ comment.user }} says: {{ comment.comment }}
+            </div>
+            <div>
+                {{ comment.comment_date }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 <div>
     <h3>Details</h3>
     <div>

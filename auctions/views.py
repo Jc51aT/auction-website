@@ -4,12 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
 from .models import User, Auction_Bids, Auction_Comments, Auction_Listing
 from .forms import *
-
-from django.utils import timezone
-
+from django.utils import timezone,dateformat
 
 def index(request):
     return render(request, "auctions/index.html",{
@@ -100,7 +97,8 @@ def auction(request, listing_id):
     listing = Auction_Listing.objects.get(id=listing_id)
     max_bid = Auction_Bids.objects.filter(auction_listing=listing).order_by('bid_amount').first()
     watchlist =  request.user.watchlist.all()
-    u = request.user
+    current_user_name = request.user.username
+    listing_comments = Auction_Comments.objects.filter(auction_listing=listing)
 
     if request.method == "POST":
         bid = request.POST["bid"]
@@ -110,6 +108,8 @@ def auction(request, listing_id):
                 "listing": listing,
                 "max_user": max_bid.user if max_bid else None,
                 "watchlist": watchlist,
+                "comments": listing_comments,
+                "user_name": current_user_name,
                 "num_bids": len(Auction_Bids.objects.filter(auction_listing=listing)),
                 "message": None
             })
@@ -127,6 +127,8 @@ def auction(request, listing_id):
             return render(request, "auctions/auction.html", {
                 "listing": listing,
                 "max_user": max_bid.user if max_bid else None,
+                "comments": listing_comments,
+                "user_name": current_user_name,
                 "watchlist": watchlist,
                 "num_bids": len(Auction_Bids.objects.filter(auction_listing=listing)),
                 "message": "Bid must be great then current price."
@@ -135,6 +137,8 @@ def auction(request, listing_id):
     return render(request, "auctions/auction.html", {
         "listing": listing,
         "max_user": max_bid.user if max_bid else None,
+        "user_name": current_user_name,
+        "comments": listing_comments,
         "watchlist": watchlist,
         "num_bids": len(Auction_Bids.objects.filter(auction_listing=listing))
     })
@@ -142,11 +146,31 @@ def auction(request, listing_id):
 def watchlist_ajax(request,listing_id):
     u = request.user
     listing = Auction_Listing.objects.get(id=listing_id)
-    data = {'success': False} 
+    data = {'success': False}
 
     if request.method=='POST':
         u.watchlist.add(listing)
         u.save()
+        data['success'] = True
+    return JsonResponse(data)
+
+def comment_ajax(request,listing_id):
+    user = request.user
+    user_name = user.username
+    listing = Auction_Listing.objects.get(id=listing_id)
+    comment = request.POST.get('comment',None)
+
+    data = {
+            'success': False,
+            'user_name': user_name,
+            'current_date': dateformat.format(timezone.now(), 'Y-m-d H:i:s')
+            }
+    if request.method=='POST' and comment != '':
+        auction_comm = Auction_Comments()
+        auction_comm.user = user
+        auction_comm.comment = comment
+        auction_comm.auction_listing = listing
+        auction_comm.save()
         data['success'] = True
     return JsonResponse(data)
 
