@@ -154,6 +154,17 @@ def watchlist_ajax(request,listing_id):
         data['success'] = True
     return JsonResponse(data)
 
+def watchlist_remove_ajax(request,listing_id):
+    u = request.user
+    listing = Auction_Listing.objects.get(id=listing_id)
+    data = {'success': False}
+
+    if request.method=='POST':
+        u.watchlist.remove(listing)
+        u.save()
+        data['success'] = True
+    return JsonResponse(data)
+
 def comment_ajax(request,listing_id):
     user = request.user
     user_name = user.username

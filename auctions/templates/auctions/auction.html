@@ -6,13 +6,14 @@
 <h2 id="listing_title">Listings: {{ listing.listing_title }}</h2>
 {% if user.is_authenticated %}
     {% if listing in watchlist %}
-    <span class="badge badge-pill badge-info">
-        On Watchlist
-    </span>
+    <form id="watchlist-form" class='onWatchList' method="post">
+        {% csrf_token %}
+        <button class="badge badge-pill badge-info" id='onWatchList' type="submit">On Watchlist</button>
+    </form>
     {% else %}
         <form id="watchlist-form" method="post">
             {% csrf_token %}
-            <button type="submit">Add to Watchlist</button>
+            <button  class="badge badge-pill badge-info" id='notWatchList' type="submit">Add to Watchlist</button>
         </form>
     {% endif %}
 {% endif %}

@@ -14,6 +14,7 @@ urlpatterns = [
     path('categories/<str:listing_categories>', views.category, name='category'),
     path('watchlist/', views.watchlist, name='watchlist'),
     re_path(r'(?P<listing_id>[0-9]*)/watchlist_ajax/$',views.watchlist_ajax),
+    re_path(r'(?P<listing_id>[0-9]*)/watchlist_remove_ajax/$',views.watchlist_remove_ajax),
     re_path(r'(?P<listing_id>[0-9]*)/comment_ajax/$',views.comment_ajax),
     
 ]

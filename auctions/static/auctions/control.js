@@ -1,9 +1,13 @@
 // Submit post on submit
 $(document).ready(function(){
-    $('#watchlist-form').on('submit', function(e){
+    $('#watchlist-form').on('submit', function(){
         event.preventDefault();
-        console.log(e);
-        update_watchlist();
+        if($('#watchlist-form').hasClass('onWatchList')){
+            remove_watchlist();
+        }
+        else{
+            add_watchlist();
+        }
     });
     $('#comment-form').on('submit', function(){
         event.preventDefault();
@@ -11,7 +15,41 @@ $(document).ready(function(){
     });
 });
 
-function update_watchlist(){
+function remove_watchlist(){
+    console.log("removing from watchlist...");  // sanity check
+    let watchlist = '{{ watchlist }}';
+    let listing = '{{ listing }}';
+    
+    $.ajax({
+        type: "POST",
+        url: 'watchlist_remove_ajax/',
+        data:{
+            watchlist:watchlist,
+            lisitng:listing,
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        },
+        datatype:'json',
+
+        // handle a successful response
+        success : function(data) {
+            if(data['success']){
+                $('#watchlist-form').removeClass("onWatchList");
+                $('#onWatchList').text("Add to Watchlist");
+                console.log(data); // log the returned json to the console
+                console.log("success"); // another sanity check
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+}
+
+function add_watchlist(){
     console.log("updating watchlist...");  // sanity check
     let watchlist = '{{ watchlist }}';
     let listing = '{{ listing }}';
@@ -30,9 +68,8 @@ function update_watchlist(){
         // handle a successful response
         success : function(data) {
             if(data['success']){
-                $('#watchlist-form').remove();
-                let ele = $('<span class="badge badge-pill badge-info"></span>').text("On Watchlist");
-                $('#listing_title').append(ele);
+                $('#watchlist-form').addClass("onWatchList");
+                $('#onWatchList').text("On Watchlist");
                 console.log(data); // log the returned json to the console
                 console.log("success"); // another sanity check
             }
