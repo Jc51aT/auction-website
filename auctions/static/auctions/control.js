@@ -35,7 +35,6 @@ function remove_watchlist(){
             if(data['success']){
                 $('#watchlist-form').removeClass("onWatchList");
                 $('#onWatchList').text("Add to Watchlist");
-                console.log(data); // log the returned json to the console
                 console.log("success"); // another sanity check
             }
         },
@@ -50,7 +49,7 @@ function remove_watchlist(){
 }
 
 function add_watchlist(){
-    console.log("updating watchlist...");  // sanity check
+    console.log("adding to watchlist...");  // sanity check
     let watchlist = '{{ watchlist }}';
     let listing = '{{ listing }}';
     
@@ -70,7 +69,6 @@ function add_watchlist(){
             if(data['success']){
                 $('#watchlist-form').addClass("onWatchList");
                 $('#onWatchList').text("On Watchlist");
-                console.log(data); // log the returned json to the console
                 console.log("success"); // another sanity check
             }
         },
